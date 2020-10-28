@@ -71,6 +71,14 @@ alter table Locales add HoraRegistro Time
 alter table Locales add UsuarioRegistro varchar(15)
 alter table Locales add FechaModificacion Date not null default(getdate())
 
+---Anexo clase dia 2
+alter table Locales add IdTipoNegocio int
+
+alter table Locales
+with check add constraint FK_IdTipoNegocio foreign key (IdTipoNegocio)
+references TipoLocal (IdTipoNegocio)
+
+
 ----Selecionando datos de mi tabla
 
 select * from Locales
@@ -97,7 +105,52 @@ select a.TipoLocal, a.NombreLocal from Locales a
 where a.TipoLocal like '%tecnolo%'
 
 
+--------Anexo en el dia 2
+--Creamos la tabla para manejar la relacion 1 a M
+Create table TipoLocal
+(
+	IdTipoNegocio int identity(1,1),
+	TipoNegocio varchar(100) NOT NULL,
+	Estado char(1),
+
+	constraint PK_IdTipoNegocio primary key clustered(IdTipoNegocio)
+)
+
+select * from AppTienda..TipoLocal
+
+----DML
+----Manipulacion (Insercion)
+/*
+insert into TipoLocal (TipoNegocio, Estado)
+values ('Retail', 'A')
+insert into TipoLocal (TipoNegocio, Estado)
+values ('Ferreteria', 'A')
+insert into TipoLocal (TipoNegocio, Estado)
+values ('Tecnologia Hardware', 'A')
+insert into TipoLocal (TipoNegocio, Estado)
+values ('Tecnologia', 'A')
+*/
+
+---Update (Actualizaciones)
+
+select * from AppTienda..Locales
+select * from AppTienda..TipoLocal
+
+select * from AppTienda..Locales where IdTipoNegocio = 2
+select * from AppTienda..Locales where IdTipoNegocio = 4
+
+update AppTienda..Locales set IdTipoNegocio = 4
+where TipoLocal = 'Tecnologia'
+
+update AppTienda..Locales set IdTipoNegocio = 3
+where TipoLocal = 'Tecnologia Hardware'
+
+update AppTienda..Locales set IdTipoNegocio = 1
+where TipoLocal = 'Retail'
+
 ----Integridad Referencial
+
+
 
 create table Productos
 (
